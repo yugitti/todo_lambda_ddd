@@ -16,6 +16,17 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
+      ApiKeySourceType: HEADER
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          CreateUsagePlan: PER_API
+          Quota:
+            Limit: 5000
+            Period: MONTH
+          Throttle:
+            BurstLimit: 200
+            RateLimit: 1000
       Cors:
         AllowMethods: "'OPTIONS, POST, GET'"
         AllowHeaders: "'Content-Type'"
@@ -197,4 +208,7 @@ Outputs:
   APIGatewayEndpoint:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
     Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  APIKey:
+    Description: "API Key"
+    Value: !Ref ApiGatewayApi
 

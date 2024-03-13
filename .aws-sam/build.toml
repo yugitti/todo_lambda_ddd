@@ -39,6 +39,7 @@ EntryPoints = ["TaskCreateHandler.ts"]
 
 
 
+
 [function_build_definitions.844aa80f-79ad-4a62-ac92-d99b5c72b5b6]
 codeuri = "/Users/yugi/programing/workspace/working_sample_project/todo_lambda_ts/src/presentation/handlers"
 runtime = "nodejs18.x"
@@ -56,6 +57,7 @@ Minify = true
 Target = "es2020"
 Sourcemap = true
 EntryPoints = ["TaskGetHandler.ts"]
+
 
 
 
@@ -86,6 +88,7 @@ EntryPoints = ["TaskUpdateHandler.ts"]
 
 
 
+
 [function_build_definitions.6f8f321c-5f58-4dc8-baca-1e07c21086c8]
 codeuri = "/Users/yugi/programing/workspace/working_sample_project/todo_lambda_ts/src/presentation/handlers"
 runtime = "nodejs18.x"
@@ -103,6 +106,7 @@ Minify = true
 Target = "es2020"
 Sourcemap = true
 EntryPoints = ["TaskDeleteHandler.ts"]
+
 
 
 
