@@ -8,11 +8,12 @@ import { IUsecase } from '../../application/interfaces/ITaskUsecase';
 export const setupDependencies = (): { taskUsecase: IUsecase } => {
   const DDB_TABLE = process.env['DDB_TABLE'] ?? '';
   const DDB_ENDPOINT = process.env['DDB_ENDPOINT'];
-  const AWS_REGION = process.env['AWS_REGION'];
+
+  console.log('DDB_TABLE', DDB_TABLE);
+  console.log('DDB_ENDPOINT', DDB_ENDPOINT);
 
   const docClient = new AWS.DynamoDB.DocumentClient({
     ...(DDB_ENDPOINT && { endpoint: DDB_ENDPOINT }),
-    ...(AWS_REGION && { region: AWS_REGION }),
   });
   const ddbClient = DDBclient(DDB_TABLE, docClient);
 

@@ -1,0 +1,200 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  test2
+
+  Sample SAM Template for test2
+  
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'OPTIONS, POST, GET'"
+        AllowHeaders: "'Content-Type'"
+        AllowOrigin: "'*'" #DO NOT USE THIS VALUE IN PRODUCTION - https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-cors.html
+
+  createTaskFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/presentation/handlers
+      Handler: TaskCreateHandler.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Timeout: 100
+      Events:
+        Task:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /task/create/{projectId}/{groupId}
+            Method: PUT
+            RestApiId:
+              Ref: ApiGatewayApi            
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref taskTable
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          DDB_TABLE: !Ref taskTable
+          DDB_ENDPOINT: ""
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints: 
+        - TaskCreateHandler.ts
+
+  getTaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: get task function
+      CodeUri: src/presentation/handlers
+      Handler: TaskGetHandler.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Timeout: 100
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /task/get/{groupId}/{id}
+            Method: GET
+            RestApiId:
+              Ref: ApiGatewayApi
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref taskTable
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          DDB_TABLE: !Ref taskTable
+          DDB_ENDPOINT: ""
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints: 
+        - TaskGetHandler.ts
+
+  updateTaskFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/presentation/handlers
+      Handler: TaskUpdateHandler.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Timeout: 100
+      Events:
+        Task:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /task/update
+            Method: POST
+            RestApiId:
+              Ref: ApiGatewayApi            
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref taskTable
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          DDB_TABLE: !Ref taskTable
+          DDB_ENDPOINT: ""
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints: 
+        - TaskUpdateHandler.ts
+
+  deleteTaskFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/presentation/handlers
+      Handler: TaskDeleteHandler.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Timeout: 100
+      Events:
+        Task:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /task/delete/{groupId}/{id}
+            Method: DELETE
+            RestApiId:
+              Ref: ApiGatewayApi            
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref taskTable
+      Environment:
+        Variables:
+          # Make table name accessible as environment variable from function code during execution
+          DDB_TABLE: !Ref taskTable
+          DDB_ENDPOINT: ""
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints: 
+        - TaskDeleteHandler.ts
+
+
+  taskTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema: 
+        - 
+          AttributeName: pkGroupId
+          KeyType: HASH
+        - 
+          AttributeName: skTaskId
+          KeyType: RANGE
+      AttributeDefinitions:
+        - 
+          AttributeName: pkGroupId
+          AttributeType: S
+        - 
+          AttributeName: skTaskId
+          AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+
+
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  APIGatewayEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+

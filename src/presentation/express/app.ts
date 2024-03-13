@@ -45,7 +45,7 @@ router.post('/task/update/:groupId/:id', async (req: Request, res: Response) => 
   return res.status(r.statusCode).json(r.body);
 });
 
-router.get('/task/delete/:groupId/:id', async (req: Request, res: Response) => {
+router.delete('/task/delete/:groupId/:id', async (req: Request, res: Response) => {
   const { groupId, id } = req.params;
   const body = { groupId, id };
   const r = await TaskDeleteController(body, taskUsecase);

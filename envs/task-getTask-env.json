@@ -1,0 +1,5 @@
+{
+  "getTaskFunction":{
+    "DDB_ENDPOINT":"http://dynamodb-local:8000"
+  }
+}

@@ -51,6 +51,7 @@ export const DDBclient = (tableName: string, docClient: any): IDDBclient => {
       TableName: tableName,
       Item: item,
     };
+    console.log('DDB保存:', ui(params));
     try {
       const data = await docClient.put(params).promise();
       return data;

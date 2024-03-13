@@ -15,6 +15,8 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   const groupId = event.pathParameters?.groupId;
   const projectId = event.pathParameters?.projectId;
   const body = { groupId, projectId };
+  console.log('event', event);
+  console.log('body', body);
 
   try {
     const res = await TaskCreateController(body, taskUsecase);
