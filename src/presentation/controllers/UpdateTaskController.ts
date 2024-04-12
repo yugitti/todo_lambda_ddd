@@ -3,10 +3,23 @@
 ////////////////////////////////////////////////
 import { validate } from '../validation/TaskValidator';
 import { IUpdateTaskUsecase } from '../../application/usecases/UpdateTaskUsecase';
-import { ITaskUpdateInput } from '../interfaces/ITaskUpdate';
-import { IControllerResponse } from '../interfaces/IControllerResponse';
+import { IControllerResponse } from '../../shared/interfaces/IControllerResponse';
 
 import { TaskValidateSchma } from '../validation/schema/TaskUpdateSchema';
+
+interface ITaskUpdateInput {
+  id: string;
+  groupId: string;
+  title?: string;
+  description?: string;
+  projectId?: string;
+  isDone?: boolean;
+  isDeleted?: boolean;
+  startDate?: string;
+  endDate?: string;
+  category?: string;
+  progress?: string;
+}
 
 /// lambda handler case
 export const TaskUpdateController = async (

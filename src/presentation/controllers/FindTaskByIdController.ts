@@ -3,10 +3,14 @@
 ////////////////////////////////////////////////
 import { validate } from '../validation/TaskValidator';
 import { IFindTaskByTaskIdUsecase } from '../../application/usecases/FindTaskbyTaskId';
-import { ITaskGetInput } from '../interfaces/ITaskGet';
-import { IControllerResponse } from '../interfaces/IControllerResponse';
+import { IControllerResponse } from '../../shared/interfaces/IControllerResponse';
 
 import { TaskValidateSchma } from '../validation/schema/TaskGetSchema';
+
+interface ITaskGetInput {
+  id: string;
+  groupId: string;
+}
 
 /// lambda handler case
 export const FindTaskByTaskIdController = async (

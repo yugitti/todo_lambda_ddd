@@ -66,38 +66,59 @@ export class Task {
     // helper
   }
 
+  // factory method
   static create(required: ITaskRequired, optional: ITaskOptional = {}): Task {
     return new Task(required, optional);
   }
 
-  // title
+  // getter
   get title(): Title {
     return this._title;
   }
+
+  get description(): Description {
+    return this._description;
+  }
+
+  get isDone(): boolean {
+    return this._isDone;
+  }
+
+  get deleteStatus(): DeleteStatus {
+    return this._deleteStatus;
+  }
+
+  get startDate(): StartDate | undefined {
+    return this._startDate;
+  }
+
+  get endDate(): EndDate | undefined {
+    return this._endDate;
+  }
+
+  get category(): Category | undefined {
+    return this._category;
+  }
+
+  get progress(): Progress | undefined {
+    return this._progress;
+  }
+
+  // change fields
+  // implement domain login in following method
+
   changeTitle(title: Title): void {
     this._title = title;
   }
 
-  // description
-  get description(): Description {
-    return this._description;
-  }
   changeDescription(description: Description): void {
     this._description = description;
   }
 
-  // isDone
-  get isDone(): boolean {
-    return this._isDone;
-  }
   changeIsDone(isDone: boolean): void {
     this._isDone = isDone;
   }
 
-  // isDeleted
-  get deleteStatus(): DeleteStatus {
-    return this._deleteStatus;
-  }
   changeDeleteStatus(changeValue: DeleteStatus): void {
     // not allow if current status is "NotDeleted" and change to "PermanentlyDeleted
     if (
@@ -113,38 +134,23 @@ export class Task {
     this._deleteStatus = changeValue;
   }
 
-  // startDate
-  get startDate(): StartDate | undefined {
-    return this._startDate;
-  }
   changeStartDate(startDate: StartDate): void {
     this._startDate = startDate;
   }
 
-  // endDate
-  get endDate(): EndDate | undefined {
-    return this._endDate;
-  }
-  changeEndDate(endDate: EndDate) {
+  changeEndDate(endDate: EndDate): void {
     this._endDate = endDate;
   }
 
-  // category
-  get category(): Category | undefined {
-    return this._category;
-  }
   changeCategory(category: Category): void {
     this._category = category;
   }
 
-  // progress
-  get progress(): Progress | undefined {
-    return this._progress;
-  }
   changeProgress(progress: Progress): void {
     this._progress = progress;
   }
 
+  // helper
   changeOptionalFields(optional: ITaskOptional): void {
     const changeFields: { [K in keyof ITaskOptional]: (value: any) => void } = {
       title: this.changeTitle,

@@ -3,10 +3,14 @@
 ////////////////////////////////////////////////
 import { validate } from '../validation/TaskValidator';
 import { ICreateTaskUsecase } from '../../application/usecases/CreateTaskUsecase';
-import { ITaskCreateInput } from '../interfaces/ITaskCreate';
-import { IControllerResponse } from '../interfaces/IControllerResponse';
+import { IControllerResponse } from '../../shared/interfaces/IControllerResponse';
 
 import { TaskValidateSchma } from '../validation/schema/TaskCreateSchema';
+
+interface ITaskCreateInput {
+  projectId: string;
+  groupId: string;
+}
 
 /// lambda handler case
 export const TaskCreateController = async (

@@ -3,10 +3,14 @@
 ////////////////////////////////////////////////
 import { validate } from '../validation/TaskValidator';
 import { IDeleteTaskUsecase } from '../../application/usecases/DeleteTaskUsecase';
-import { ITaskDeleteInput } from '../interfaces/ITaskDelete';
-import { IControllerResponse } from '../interfaces/IControllerResponse';
+import { IControllerResponse } from '../../shared/interfaces/IControllerResponse';
 
 import { TaskValidateSchma } from '../validation/schema/TaskGetSchema';
+
+interface ITaskDeleteInput {
+  id: string;
+  groupId: string;
+}
 
 /// lambda handler case
 export const TaskDeleteController = async (
