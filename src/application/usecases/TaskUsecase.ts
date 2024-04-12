@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ITask } from '../../domain/entities/Task';
+import { ITask } from '../../domain/Task';
 import { IUsecase } from '../interfaces/ITaskUsecase';
-import { IRepository } from '../interfaces/IRepository';
+import { IRepository } from '../../domain/repository/IRepository';
 import { getNow } from '../../shared/utility/utility';
 
 export const TaskUsecase = (repository: IRepository): IUsecase => {
@@ -9,7 +9,7 @@ export const TaskUsecase = (repository: IRepository): IUsecase => {
     return await repository.fetchTask(groupId, taskId);
   };
   const fetchTaskByTaskId = async (groupId: string) => {
-    return await repository.fetchTaskByTaskId(groupId);
+    return await repository.findTaskByTaskId(groupId);
   };
   const createTask = async (projectId: string, groupId: string) => {
     const task = createDefaultTask(projectId, groupId);

@@ -1,6 +1,14 @@
-import { IDDBclient } from '../database/ddbClient';
-import { ITask } from '../../domain/entities/Task';
-import { IRepository } from '../../application/interfaces/IRepository';
+import { AWS } from '../aws/awsSDK';
+import { DDBclient } from '../aws/ddbClient';
+import { Task } from '../../domain/Task';
+import { IRepository } from '../../domain/repository/IRepository';
+
+const DDB_TABLE = process.env['DDB_TABLE'] ?? '';
+const DDB_ENDPOINT = process.env['DDB_ENDPOINT'];
+const docClient = new AWS.DynamoDB.DocumentClient({
+  ...(DDB_ENDPOINT && { endpoint: DDB_ENDPOINT }),
+});
+const ddbClient = DDBclient(DDB_TABLE, docClient);
 
 /*
   DynamoDB Table Information
@@ -8,47 +16,47 @@ import { IRepository } from '../../application/interfaces/IRepository';
   Primary Key: GROUP#{groupId} (String)
   Sort Key: TASK#{id} (String)
 */
-export const DynamoDbRepository = (ddbClient: IDDBclient): IRepository => {
-  const fetchTask = async (groupId: string, id: string) => {
+
+export const DynamoDbRepository = (): IRepository => {
+  const findTaskByTaskId = async (groupId: string, id: string): Promise<Task | undefined> => {
     const key = {
       pkGroupId: `GROUP#${groupId}`, // pk
       skTaskId: `TASK#${id}`, // sk
     };
 
     const res = await ddbClient.get(key);
-    return res as ITask;
+    return res as Task;
   };
-  const fetchTaskByTaskId = async (groupId: string) => {
+  const findTasksByGroupId = async (groupId: string) => {
     const res = await ddbClient.query(groupId);
-    return res as ITask[];
+    return res as Task[];
   };
-  const createTask = async (task: ITask) => {
+  const createTask = async (task: Task) => {
     const item = {
       pkGroupId: `GROUP#${task.groupId}`, //pk
       skTaskId: `TASK#${task.id}`, // sk
       ...task,
     };
-    const res = await ddbClient.put(item);
-    return res as ITask;
+    await ddbClient.put(item);
   };
-  const updateTask = async (task: Partial<ITask> & { groupId: string; id: string }) => {
+  const updateTask = async (task: Task) => {
     const key = {
       pkGroupId: `GROUP#${task.groupId}`, // pk
       skTaskId: `TASK#${task.id}`, // sk
     };
-    const res = await ddbClient.update(key, task);
-    return res as ITask;
+    await ddbClient.update(key, task);
   };
+
   const deleteTask = async (groupId: string, id: string) => {
     const key = {
       pkGroupId: `GROUP#${groupId}`, // pk
       skTaskId: `TASK#${id}`, // sk
     };
-    return await ddbClient.del(key);
+    await ddbClient.del(key);
   };
   return {
-    fetchTask,
-    fetchTaskByTaskId,
+    findTasksByGroupId,
+    findTaskByTaskId,
     createTask,
     updateTask,
     deleteTask,

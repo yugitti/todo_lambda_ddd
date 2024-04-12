@@ -1,7 +1,7 @@
 export interface ITaskUpdateInput {
   id: string;
   groupId: string;
-  task?: string;
+  title?: string;
   description?: string;
   projectId?: string;
   isDone?: boolean;

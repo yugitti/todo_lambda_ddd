@@ -1,7 +1,7 @@
-import { TaskCreateController } from '../src/presentation/controllers/TaskCreateController';
-import { TaskGetController } from '../src/presentation/controllers/TaskGetController';
-import { TaskUpdateController } from '../src/presentation/controllers/TaskUpdateController';
-import { TaskDeleteController } from '../src/presentation/controllers/TaskDeleteController';
+import { TaskCreateController } from '../src/presentation/controllers/CreateTaskController';
+import { FindTaskByTaskIdController } from '../src/presentation/controllers/FindTaskByIdController';
+import { TaskUpdateController } from '../src/presentation/controllers/UpdateTaskController';
+import { TaskDeleteController } from '../src/presentation/controllers/DeleteTaskController';
 import { setupDependencies } from '../src/infrastructure/config/setUpDependency';
 
 const main = async () => {
@@ -23,7 +23,7 @@ const main = async () => {
     id: res.body.id,
     groupId: res.body.groupId,
   };
-  res = await TaskGetController(param, taskUsecase);
+  res = await FindTaskByTaskIdController(param, taskUsecase);
   console.log('get task');
   console.log(res);
 

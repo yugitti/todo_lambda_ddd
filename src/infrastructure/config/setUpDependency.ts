@@ -1,6 +1,6 @@
 import { AWS } from '../aws/awsSDK';
-import { DDBclient } from '../database/ddbClient';
-import { DynamoDbRepository } from '../repositories/dynamoDbRepository';
+import { DDBclient } from '../aws/ddbClient';
+import { DynamoDbRepository } from '../repositories/DynamoDbRepository';
 import { TaskUsecase } from '../../application/usecases/TaskUsecase';
 import { IUsecase } from '../../application/interfaces/ITaskUsecase';
 // DynamoDB

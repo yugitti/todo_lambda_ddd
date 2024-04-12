@@ -1,4 +1,4 @@
-import { ITask } from '../../domain/entities/Task';
+import { ITask } from '../../domain/Task';
 
 export interface IUsecase {
   fetchTask: (groupId: string, taskId: string) => Promise<ITask>;

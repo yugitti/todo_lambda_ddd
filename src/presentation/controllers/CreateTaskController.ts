@@ -2,7 +2,7 @@
 // Common controller for task processing
 ////////////////////////////////////////////////
 import { validate } from '../validation/TaskValidator';
-import { IUsecase } from '../../application/interfaces/ITaskUsecase';
+import { ICreateTaskUsecase } from '../../application/usecases/CreateTaskUsecase';
 import { ITaskCreateInput } from '../interfaces/ITaskCreate';
 import { IControllerResponse } from '../interfaces/IControllerResponse';
 
@@ -11,7 +11,7 @@ import { TaskValidateSchma } from '../validation/schema/TaskCreateSchema';
 /// lambda handler case
 export const TaskCreateController = async (
   body: { [key: string]: any },
-  taskUsecase: IUsecase,
+  usecase: ICreateTaskUsecase,
 ): Promise<IControllerResponse> => {
   // validate
   const inputData = validate<ITaskCreateInput>(TaskValidateSchma, body);
@@ -19,7 +19,13 @@ export const TaskCreateController = async (
   // dto
 
   // usecase
-  const res = await taskUsecase.createTask(inputData.projectId, inputData.groupId);
+  const res = await usecase.run({
+    required: {
+      projectId: inputData.projectId,
+      groupId: inputData.groupId,
+    },
+    optional: {},
+  });
 
   // return
   return { statusCode: 200, body: res };

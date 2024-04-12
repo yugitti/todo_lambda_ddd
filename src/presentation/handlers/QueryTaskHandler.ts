@@ -2,24 +2,24 @@
 // Common controller for task processing
 ////////////////////////////////////////////////
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { setupDependencies } from '../../infrastructure/config/setUpDependency';
-import { TaskCreateController } from '../controllers/TaskCreateController';
+import { FindTaskByTaskIdController } from '../controllers/FindTaskByIdController';
 import { GetLambdaResponse } from '../../shared/utility/response';
 import { CustomError } from '../../shared/utility/error';
+
+// Simple DI
+import { FindTaskByTaskIdUsecase } from '../../application/usecases/FindTaskbyTaskId';
+import { DynamoDbRepository } from '../../infrastructure/repositories/DynamoDbRepository';
+const taskUsecase = FindTaskByTaskIdUsecase(DynamoDbRepository());
+
 // lambda handler
 export const handler: APIGatewayProxyHandler = async (event) => {
   // DI
-  const { taskUsecase } = setupDependencies();
 
   // パスパラメータの取得
-  const groupId = event.pathParameters?.groupId;
-  const projectId = event.pathParameters?.projectId;
-  const body = { groupId, projectId };
-  console.log('event', event);
-  console.log('body', body);
+  const body = event.pathParameters as { [key: string]: any };
 
   try {
-    const res = await TaskCreateController(body, taskUsecase);
+    const res = await FindTaskByTaskIdController(body, taskUsecase);
     return GetLambdaResponse(res.statusCode, res.body);
   } catch (e) {
     const error = e instanceof CustomError ? e : new CustomError('E5999', e as Error);
